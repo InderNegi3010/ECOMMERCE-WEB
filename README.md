@@ -98,49 +98,32 @@ A full-stack, modern e-commerce web application with separate admin and user int
    npm run dev
    ```
 
-## 🚀 Deployment on Render (Free)
+## 🚀 Deployment Guide (Free)
 
-### Step 1: Prepare Your Repository
+### 1. Backend API on Railway
 
-Make sure your code is pushed to GitHub with the `render.yaml` configuration file.
+1. Go to [https://railway.app/](https://railway.app/) and sign in with GitHub.
+2. Click "New Project" → "Deploy from GitHub repo".
+3. Select your `ECOMMERCE-WEB` repository.
+4. Set the project root to `/backend`.
+5. Railway will auto-detect Node.js and install dependencies.
+6. Add your environment variables in the Railway dashboard (copy from `backend/env.example`).
+7. Deploy and copy your backend public URL.
 
-### Step 2: Set Up MongoDB Atlas (Free)
+### 2. Frontend & Admin on Vercel or Netlify
 
-1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
-2. Create a free account and cluster
-3. Get your connection string
-4. Add your IP address to the whitelist (or use 0.0.0.0/0 for all IPs)
+**For each (frontend and admin):**
 
-### Step 3: Set Up Cloudinary (Free)
+1. Go to [Vercel](https://vercel.com/) or [Netlify](https://netlify.com/) and sign in with GitHub.
+2. Click "New Project" and select your repo.
+3. Set the project root to `/frontend` (for user site) or `/admin` (for admin panel).
+4. Set the build command to `npm run build` and output directory to `dist`.
+5. Add the environment variable `VITE_BACKEND_URL` pointing to your Railway backend URL.
+6. Deploy and copy your public URL.
 
-1. Go to [Cloudinary](https://cloudinary.com/)
-2. Create a free account
-3. Get your cloud name, API key, and API secret
+### 3. MongoDB Atlas, Cloudinary, Stripe, Razorpay
 
-### Step 4: Set Up Payment Gateways
-
-1. **Stripe:** Create account at [stripe.com](https://stripe.com)
-2. **Razorpay:** Create account at [razorpay.com](https://razorpay.com)
-
-### Step 5: Deploy on Render
-
-1. Go to [Render Dashboard](https://dashboard.render.com/)
-2. Click "New" → "Blueprint"
-3. Connect your GitHub repository
-4. Render will automatically detect the `render.yaml` file
-5. Add your environment variables in the Render dashboard:
-   - `MONGODB_URI`: Your MongoDB Atlas connection string
-   - `JWT_SECRET`: A random secret string
-   - `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud name
-   - `CLOUDINARY_API_KEY`: Your Cloudinary API key
-   - `CLOUDINARY_API_SECRET`: Your Cloudinary API secret
-   - `STRIPE_SECRET_KEY`: Your Stripe secret key
-   - `RAZORPAY_KEY_ID`: Your Razorpay key ID
-   - `RAZORPAY_KEY_SECRET`: Your Razorpay secret key
-
-### Step 6: Update Frontend URLs
-
-After deployment, update the `VITE_BACKEND_URL` in both frontend and admin services to point to your deployed backend URL.
+- Set up as before (see `.env.example` for required variables).
 
 ## 📁 Project Structure
 
