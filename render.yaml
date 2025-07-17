@@ -3,7 +3,6 @@ services:
   - type: web
     name: ecommerce-backend
     env: node
-    plan: free
     buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
     envVars:
