@@ -13,30 +13,34 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Connect DB and Cloudinary
 connectDB();
 connectCloudinary();
 
-// CORS Config
+// ✅ CORS fix: use function version to debug
 app.use(cors({
-  origin: [
-    'https://foreverindernegi.netlify.app', // ✅ remove trailing slash
-    'http://localhost:5173',
-    'http://localhost:5174',
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://foreverindernegi.netlify.app',
+      'http://localhost:5173',
+      'http://localhost:5174',
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed from this origin: " + origin));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Preflight handler
+// ✅ Handle preflight requests
 app.options('*', cors());
 
-// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
