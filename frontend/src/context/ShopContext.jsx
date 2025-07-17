@@ -39,13 +39,13 @@ const showToast = (text, type = "info") => {
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   console.log("Environment check:");
   console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
   console.log("All env vars:", import.meta.env);
   console.log("Final backendUrl:", backendUrl);
 
-  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
