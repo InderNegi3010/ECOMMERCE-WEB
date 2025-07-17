@@ -10,24 +10,27 @@ import orderRouter from "./routes/orderRouter.js";
 
 dotenv.config();
 
+// App setup
 const app = express();
 const port = process.env.PORT || 8080;
 
+// Connect DB & Cloudinary
 connectDB();
 connectCloudinary();
 
-// ✅ CORS fix: use function version to debug
+// ✅ Primary CORS setup
+const allowedOrigins = [
+  'https://foreverindernegi.netlify.app',
+  'http://localhost:5173',
+  'http://localhost:5174',
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://foreverindernegi.netlify.app',
-      'http://localhost:5173',
-      'http://localhost:5174',
-    ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("CORS not allowed from this origin: " + origin));
+      callback(new Error("CORS not allowed from origin: " + origin));
     }
   },
   credentials: true,
@@ -35,19 +38,34 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ✅ Handle preflight requests
-app.options('*', cors());
+// ✅ Safe manual fallback for CORS preflight (no crash!)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
 
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/user', userRouter);
-app.use('/api/product', productRouter);
-app.use('/api/cart', cartRouter);
-app.use('/api/order', orderRouter);
+// Routes
+app.use("/api/user", userRouter);
+app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 
+// Root route
 app.get("/", (req, res) => {
   res.send("API is Working");
 });
 
+// Start server
 app.listen(port, () => console.log("Server started on Port:", port));
