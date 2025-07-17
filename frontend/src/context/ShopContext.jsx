@@ -43,11 +43,6 @@ const ShopContextProvider = ({ children }) => {
   // ✅ backendUrl declared first
   const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
-  console.log("Environment check:");
-  console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
-  console.log("All env vars:", import.meta.env);
-  console.log("Final backendUrl:", backendUrl);
-
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState(() => {
@@ -120,9 +115,7 @@ const ShopContextProvider = ({ children }) => {
   const getProductsData = async () => {
     try {
       const url = backendUrl + "/api/product/list";
-      console.log("Calling product API:", url);
       const response = await axios.get(url);
-      console.log("Product response:", response.data);
 
       if (response.data.success) {
         setProducts(response.data.products);
