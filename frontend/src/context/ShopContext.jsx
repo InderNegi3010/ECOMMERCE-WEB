@@ -39,8 +39,14 @@ const showToast = (text, type = "info") => {
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
-  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-  
+
+  console.log("Environment check:");
+  console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+  console.log("All env vars:", import.meta.env);
+  console.log("Final backendUrl:", backendUrl);
+
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
@@ -113,19 +119,21 @@ const ShopContextProvider = ({ children }) => {
     }, 0);
   };
 
-  const getProductsData = async () => {
-    try {
-      const response = await axios.get(backendUrl + "/api/product/list");
-      if (response.data.success) {
-        setProducts(response.data.products);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+  
+const getProductsData = async () => {
+  try {
+    console.log('Making request to:', backendUrl + "/api/product/list");
+    const response = await axios.get(backendUrl + "/api/product/list");
+    if (response.data.success) {
+      setProducts(response.data.products);
+    } else {
+      toast.error(response.data.message);
     }
-  };
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+  }
+};
 
   const getUserCart = async (token) => {
     try {
