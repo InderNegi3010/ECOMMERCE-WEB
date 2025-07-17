@@ -39,8 +39,8 @@ const showToast = (text, type = "info") => {
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
-  const backendUrl = import.meta.env.REACT_API_URL || 'http://localhost:8080';
-
+  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
