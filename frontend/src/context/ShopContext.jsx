@@ -39,6 +39,8 @@ const showToast = (text, type = "info") => {
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
+
+  // ✅ backendUrl declared first
   const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   console.log("Environment check:");
@@ -46,16 +48,12 @@ const ShopContextProvider = ({ children }) => {
   console.log("All env vars:", import.meta.env);
   console.log("Final backendUrl:", backendUrl);
 
-
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-
-  // ✅ Load cartItems from localStorage
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem("cartItems");
     return saved ? JSON.parse(saved) : {};
   });
-
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
@@ -67,7 +65,6 @@ const ShopContextProvider = ({ children }) => {
     }
 
     const cartData = structuredClone(cartItems);
-
     if (cartData[itemId]) {
       cartData[itemId][size] = (cartData[itemId][size] || 0) + 1;
     } else {
@@ -88,7 +85,7 @@ const ShopContextProvider = ({ children }) => {
           }
         );
       } catch (error) {
-        console.log(error);
+        console.error("Add to cart error:", error);
         toast.error(error.message);
       }
     }
@@ -119,20 +116,24 @@ const ShopContextProvider = ({ children }) => {
     }, 0);
   };
 
-  
-const getProductsData = async () => {
-  try {
-    const response = await axios.get(backendUrl + "/api/product/list");
-    if (response.data.success) {
-      setProducts(response.data.products);
-    } else {
-      toast.error(response.data.message);
+  // ✅ Debug-added version of getProductsData
+  const getProductsData = async () => {
+    try {
+      const url = backendUrl + "/api/product/list";
+      console.log("Calling product API:", url);
+      const response = await axios.get(url);
+      console.log("Product response:", response.data);
+
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast.error(error.message);
     }
-  } catch (error) {
-    console.log(error);
-    toast.error(error.message);
-  }
-};
+  };
 
   const getUserCart = async (token) => {
     try {
@@ -149,7 +150,7 @@ const getProductsData = async () => {
         setCartItems(response.data.cartData);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error getting user cart:", error);
       toast.error(error.message);
     }
   };
@@ -157,9 +158,9 @@ const getProductsData = async () => {
   const getUserIdFromToken = (token) => {
     try {
       const decoded = jwtDecode(token);
-      return decoded.userId; // change this based on your token payload
+      return decoded.userId;
     } catch (err) {
-      console.error("Invalid token", err);
+      console.error("Invalid token:", err);
       return null;
     }
   };
@@ -193,20 +194,22 @@ const getProductsData = async () => {
           }
         );
       } catch (error) {
-        console.error(error);
+        console.error("Error updating quantity:", error);
       }
     }
   };
 
-  // ✅ Save cartItems to localStorage when they change
+  // ✅ Save cart to localStorage
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
+  // ✅ Fetch products on load
   useEffect(() => {
     getProductsData();
   }, []);
 
+  // ✅ Get token and user cart
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (!token && storedToken) {

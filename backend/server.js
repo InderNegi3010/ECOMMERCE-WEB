@@ -8,41 +8,42 @@ import productRouter from "./routes/productRouter.js";
 import cartRouter from "./routes/cartRouter.js";
 import orderRouter from "./routes/orderRouter.js";
 
-
 dotenv.config();
 
-
-
-
-// App configuration
 const app = express();
 const port = process.env.PORT || 8080;
-connectDB();
-connectCloudinary()
 
-// Middleware
+// Connect DB and Cloudinary
+connectDB();
+connectCloudinary();
+
+// CORS Config
 app.use(cors({
   origin: [
-    'https://forever-clothingindernegi.netlify.app', 
-    'http://localhost:5173',                         
-    'http://localhost:5174',                          
+    'https://foreverindernegi.netlify.app', // ✅ remove trailing slash
+    'http://localhost:5173',
+    'http://localhost:5174',
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Preflight handler
+app.options('*', cors());
+
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API endpoints
-app.use('/api/user', userRouter)
-app.use('/api/product', productRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/order', orderRouter)
+// Routes
+app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/order', orderRouter);
 
 app.get("/", (req, res) => {
   res.send("API is Working");
 });
 
-app.listen(port, () => console.log("Server started on Port: " + port));
+app.listen(port, () => console.log("Server started on Port:", port));
