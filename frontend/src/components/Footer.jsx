@@ -1,5 +1,4 @@
 import React from "react";
-// import { assets } from "../assets/assets.js";
 import logo from "../assets/logo.png";
 
 function Footer() {
