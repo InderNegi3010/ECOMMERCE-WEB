@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { assets } from "../assets/assets.js";
+import { cross_icon } from "../assets/assets.js";
 import { useLocation } from "react-router-dom";
 
 function SearchBar() {
@@ -44,7 +44,7 @@ function SearchBar() {
           <img src={assets.search_icon} className="w-4" alt="" />
         </div>
         <img
-          src={assets.cross_icon}
+          src={cross_icon}
           className={`inline w-3 cursor-pointer  transition-all duration-300 hover:scale-110 hover:opacity-70 ${
             showSearch ? "opacity-100" : "opacity-0"
           }`}
