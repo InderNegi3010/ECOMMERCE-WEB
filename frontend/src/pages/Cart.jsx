@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
-import { assets } from "../assets/assets";
+import { assets } from "../assets/assets.js";
 
 function Cart() {
 const { cartItems, products, currency, delivery_fee, navigate, updateQuantity } =
