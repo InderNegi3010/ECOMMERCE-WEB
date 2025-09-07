@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 import { backendUrl } from "../App";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
@@ -39,7 +37,7 @@ function Login({ setToken }) {
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className="w-full rounded-md px-3 px-2 border border-gray-300 outline-none"
+              className="w-full rounded-md px-3 border border-gray-300 outline-none"
               type="email"
               placeholder="your@email.com"
               required
@@ -50,7 +48,7 @@ function Login({ setToken }) {
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              className="w-full rounded-md px-3 px-2 border border-gray-300 outline-none"
+              className="w-full rounded-md px-3 border border-gray-300 outline-none"
               type="password"
               placeholder="Enter Your Password"
               required
