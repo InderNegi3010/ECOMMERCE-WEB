@@ -4,9 +4,9 @@ A full-stack, modern e-commerce web application with separate admin and user int
 
 ## 🌟 Live Demo
 
-- **Frontend:** [https://ecommerce-frontend.onrender.com](https://ecommerce-frontend.onrender.com)
-- **Admin Panel:** [https://ecommerce-admin.onrender.com](https://ecommerce-admin.onrender.com)
-- **Backend API:** [https://ecommerce-backend.onrender.com](https://ecommerce-backend.onrender.com)
+- **Frontend:** [https://ecommerce-web-fhiw.vercel.app/]
+- **Admin Panel:** [https://ecommerce-web-hana.vercel.app/add]
+- **Backend API:** [https://ecommerce-web-five-tawny.vercel.app/]
 
 ## 🚀 Features
 
@@ -100,7 +100,7 @@ A full-stack, modern e-commerce web application with separate admin and user int
 
 ## 🚀 Deployment Guide (Free)
 
-### 1. Backend API on Railway
+### 1. Backend API on Vercel
 
 1. Go to [https://railway.app/](https://railway.app/) and sign in with GitHub.
 2. Click "New Project" → "Deploy from GitHub repo".
@@ -110,7 +110,7 @@ A full-stack, modern e-commerce web application with separate admin and user int
 6. Add your environment variables in the Railway dashboard (copy from `backend/env.example`).
 7. Deploy and copy your backend public URL.
 
-### 2. Frontend & Admin on Vercel or Netlify
+### 2. Frontend & Admin on Vercel
 
 **For each (frontend and admin):**
 
@@ -148,22 +148,6 @@ ECOMMERCE-Web/
 └── README.md
 ```
 
-## 🔧 Environment Variables
-
-Create a `.env` file in the backend directory with the following variables:
-
-```env
-PORT=8080
-NODE_ENV=production
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-STRIPE_SECRET_KEY=your_stripe_secret_key
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_secret_key
-```
 
 ## 📸 Screenshots
 
