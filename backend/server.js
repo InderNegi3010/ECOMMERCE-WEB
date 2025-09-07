@@ -12,7 +12,7 @@ dotenv.config();
 
 // App setup
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 4000;
 
 // Connect DB & Cloudinary
 connectDB();
@@ -20,10 +20,10 @@ connectCloudinary();
 
 // ✅ Primary CORS setup
 const allowedOrigins = [
-  'https://foreverindernegi.netlify.app',
-  'http://localhost:5173',
-  'http://localhost:5174',
+  'http://localhost:3000', // frontend
+  'http://localhost:3001', // admin
 ];
+
 
 app.use(cors({
   origin: function (origin, callback) {

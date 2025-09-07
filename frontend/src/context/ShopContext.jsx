@@ -111,7 +111,6 @@ const ShopContextProvider = ({ children }) => {
     }, 0);
   };
 
-  // ✅ Debug-added version of getProductsData
   const getProductsData = async () => {
     try {
       const url = backendUrl + "/api/product/list";
@@ -231,7 +230,11 @@ const ShopContextProvider = ({ children }) => {
     setToken,
   };
 
-  return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
+  return (
+    <ShopContext.Provider value={value}>
+      {children}
+    </ShopContext.Provider>
+  );
 };
 
 export default ShopContextProvider;

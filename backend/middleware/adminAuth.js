@@ -7,7 +7,7 @@ const adminAuth = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer")) {
-      console.log("❌ No Bearer token found"); // Add this line
+      console.log("❌ No Bearer token found");
       return res
         .status(401)
         .json({ success: false, message: "Not authorized. Token missing." });
@@ -20,7 +20,7 @@ const adminAuth = async (req, res, next) => {
       decoded.email !== process.env.ADMIN_EMAIL ||
       decoded.password !== process.env.ADMIN_PASSWORD
     ) {
-      console.log("❌ Admin check failed"); // Add this line
+      console.log("❌ Admin check failed"); 
       return res
         .status(403)
         .json({ success: false, message: "Forbidden: Admins only." });

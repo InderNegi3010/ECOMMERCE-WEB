@@ -31,7 +31,7 @@ function Add({ token }) {
       formData.append("price", price);
       formData.append("category", category);
       formData.append("subCategory", subCategory);
-      formData.append("bestseller", bestseller);
+      formData.append("bestseller", JSON.stringify(bestseller));
       formData.append("sizes", JSON.stringify(sizes));
 
       image1 && formData.append("image1", image1);
