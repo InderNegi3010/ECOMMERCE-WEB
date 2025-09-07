@@ -10,49 +10,27 @@ import orderRouter from "./routes/orderRouter.js";
 
 dotenv.config();
 
-// App setup
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Connect DB & Cloudinary
 connectDB();
 connectCloudinary();
 
-// ✅ Primary CORS setup
+// ✅ Allow only frontend + admin
 const allowedOrigins = [
-  'https://ecommerce-web-fhiw.vercel.app', // frontend
-  'https://ecommerce-web-hana.vercel.app', // admin
+  "https://ecommerce-web-fhiw.vercel.app", // frontend
+  "https://ecommerce-web-hana.vercel.app", // admin
 ];
 
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS not allowed from origin: " + origin));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// ✅ Safe manual fallback for CORS preflight (no crash!)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -62,10 +40,8 @@ app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 
-// Root route
 app.get("/", (req, res) => {
   res.send("API is Working");
 });
 
-// Start server
 app.listen(port, () => console.log("Server started on Port:", port));
