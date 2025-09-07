@@ -1,92 +1,111 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { backendUrl, currency } from "../App";
+import axios from "axios";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function List({ token }) {
-  const [list, setList] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const fetchList = async () => {
+  const fetchProducts = async () => {
+    if (!token) return toast.error("Admin token missing");
     try {
-      const response = await axios.get(backendUrl + "/api/product/list");
-
-      if (response.data.success) {
-        setList(response.data.products);
-      } else {
-        toast(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    }
-  };
-
-  const removeProduct = async (id) => {
-    try {
-      const response = await axios.post(
-        backendUrl + "/api/product/remove",
-        { id },
+      setLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/product/list`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (response.data.success) {
-        toast.success(response.data.message);
-        await fetchList();
+        setProducts(response.data.products);
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message || "Failed to fetch products");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.log("Fetch error:", error.response || error);
+      toast.error("Error fetching products");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchList();
-  }, []);
+    fetchProducts();
+  }, [token]);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
+
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Product deleted successfully");
+        setProducts(products.filter((p) => p._id !== id));
+      } else {
+        toast.error(response.data.message || "Failed to delete product");
+      }
+    } catch (error) {
+      console.log("Delete error:", error.response || error);
+      toast.error("Error deleting product");
+    }
+  };
 
   return (
-    <>
-      <p className="mb-3">All products</p>
-      <div className="flex flex-col gap-3">
-        {/* -------------List Table Title---------------- */}
-
-        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2  bg-gray-150 text-sm">
-          <b>Image</b>
-          <b>Name</b>
-          <b>Category</b>
-          <b>Price</b>
-          <b className="text-center">Action</b>
+    <div className="w-full p-4">
+      <h2 className="text-2xl font-bold mb-4">Product List</h2>
+      {loading ? (
+        <p>Loading products...</p>
+      ) : products.length === 0 ? (
+        <p>No products found</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-300">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="py-2 px-4 border">#</th>
+                <th className="py-2 px-4 border">Name</th>
+                <th className="py-2 px-4 border">Category</th>
+                <th className="py-2 px-4 border">Price</th>
+                <th className="py-2 px-4 border">Bestseller</th>
+                <th className="py-2 px-4 border">Sizes</th>
+                <th className="py-2 px-4 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((p, i) => (
+                <tr key={p._id} className="hover:bg-gray-50">
+                  <td className="py-2 px-4 border">{i + 1}</td>
+                  <td className="py-2 px-4 border">{p.name}</td>
+                  <td className="py-2 px-4 border">{p.category}</td>
+                  <td className="py-2 px-4 border">${p.price}</td>
+                  <td className="py-2 px-4 border">
+                    {p.bestseller ? "Yes" : "No"}
+                  </td>
+                  <td className="py-2 px-4 border">{p.sizes.join(", ")}</td>
+                  <td className="py-2 px-4 border flex gap-2">
+                    <button
+                      onClick={() => handleDelete(p._id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
-        {/* -------------------------Product List------------------------- */}
-
-        {list.map((item, id) => (
-          <div
-            className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-3 py-2 px-3 text-sm"
-            key={item._id}
-          >
-            <img className="w-12" src={item.image[0]} alt="" />
-            <p>{item.name}</p>
-            <p>{item.category}</p>
-            <p>
-              {currency}
-              {item.price}
-            </p>
-            <p
-              onClick={() => removeProduct(item._id)}
-              className="text-right md:text-center cursor-pointer text-lg"
-            >
-              X
-            </p>
-          </div>
-        ))}
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 
