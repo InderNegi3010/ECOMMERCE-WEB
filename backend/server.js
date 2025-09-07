@@ -20,8 +20,8 @@ connectCloudinary();
 
 // ✅ Primary CORS setup
 const allowedOrigins = [
-  'http://localhost:3000', // frontend
-  'http://localhost:3001', // admin
+  'https://ecommerce-web-fhiw.vercel.app', // frontend
+  'https://ecommerce-web-hana.vercel.app', // admin
 ];
 
 
