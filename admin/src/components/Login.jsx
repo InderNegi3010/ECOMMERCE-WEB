@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { backendUrl } from "../App";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
@@ -12,25 +10,22 @@ function Login({ setToken }) {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const response = await axios.post(
-        `${backendUrl}/api/user/admin`,
+        `${import.meta.env.VITE_API_URL}/api/user/admin`,
         { email, password },
-        { withCredentials: true } // 👈 important for CORS/cookies
+        { withCredentials: true }
       );
 
       if (response.data.success) {
-        setToken(response.data.token); // save token in state/context
-        toast.success("Login successful!");
+        setToken(response.data.token);
+        toast.success("Admin logged in!");
       } else {
-        toast.error(response.data.message || "Invalid login credentials");
+        toast.error(response.data.message || "Invalid credentials");
       }
     } catch (error) {
-      console.error("Admin login error:", error);
-      toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
-      );
+      console.log("Admin login error:", error);
+      toast.error("Login failed. Please check credentials.");
     } finally {
       setLoading(false);
     }
@@ -38,41 +33,29 @@ function Login({ setToken }) {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-white shadow-md rounded-lg px-8 py-6 max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">Admin Panel</h1>
+      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
         <form onSubmit={onSubmitHandler} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              required
-              className="w-full rounded-md px-3 py-2 border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter Your Password"
-              required
-              className="w-full rounded-md px-3 py-2 border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
+          <input
+            type="email"
+            placeholder="Admin email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full border px-3 py-2 rounded-md"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full border px-3 py-2 rounded-md"
+          />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200"
+            className="w-full bg-blue-600 text-white py-2 rounded-md"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
